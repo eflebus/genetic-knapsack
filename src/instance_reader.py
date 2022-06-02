@@ -28,7 +28,8 @@ class TypeAInstanceReader:
 
         return {'capacity': capacity,
                 'num_items': num_items,
-                'items': items,
+                'weights': items[:, 0],
+                'profits': items[:, 1],
                 'optimum': optimum,
                 'optimal_selection': np.full(num_items, -1)}
 
@@ -58,13 +59,15 @@ class TypeBInstanceReader:
             optimal_selection = fp.read().splitlines()
 
         capacity = int(capacity)
-        items = np.array([[int(w), int(p)] for w, p in zip(weights, profits)])
-        num_items = len(items)
+        weights = np.array([int(w) for w in weights])
+        profits = np.array([int(p) for p in profits])
+        num_items = len(weights)
         optimal_selection = np.array([int(x) for x in optimal_selection])
-        optimum = _compute_optimum(items[:, 1], optimal_selection)
+        optimum = _compute_optimum(profits, optimal_selection)
 
         return {'capacity': capacity,
                 'num_items': num_items,
-                'items': items,
+                'weights': weights,
+                'profits': profits,
                 'optimum': optimum,
                 'optimal_selection': optimal_selection}

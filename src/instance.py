@@ -7,6 +7,7 @@ import numpy as np
 class InstanceData:
     capacity: int
     num_items: int
-    items: np.ndarray
+    weights: np.ndarray
+    profits: np.ndarray
     optimum: int
     optimal_selection: np.ndarray  # Array of -1s for type A instances
