@@ -5,18 +5,21 @@ import numpy as np
 
 
 class InstanceReader(Protocol):
-    def read_data(self, instance_path: pathlib.Path) -> dict:
+    def read_data(self, input_path: pathlib.Path) -> dict:
         """Read instance data."""
         raise NotImplementedError()
 
 
 class TypeAInstanceReader:
-    def read_data(self, instance_path: pathlib.Path) -> dict:
+    def __init__(self, input_path: pathlib.Path) -> None:
+        self.input_path = input_path
+
+    def read_data(self) -> dict:
         """Read instance data from a single text file."""
         def _str_to_nums(s: str) -> list[int]:
             return [int(num) for num in s.split()]
 
-        with open(instance_path, 'r') as fp:
+        with open(self.input_path, 'r') as fp:
             lines = fp.read().splitlines()
 
         num_items, capacity = _str_to_nums(lines[0])
@@ -31,13 +34,16 @@ class TypeAInstanceReader:
 
 
 class TypeBInstanceReader:
-    def read_data(self, instance_path: pathlib.Path) -> dict:
+    def __init__(self, input_path: pathlib.Path) -> None:
+        self.input_path = input_path
+
+    def read_data(self) -> dict:
         """Read instance data from a directory containing several text files."""
         def _compute_optimum(profits: np.ndarray, optimal_selection: np.ndarray) -> int:
             return np.sum(profits * optimal_selection)
 
         capacity_file, weights_file, profits_file, solution_file = list(
-            instance_path.iterdir())
+            self.input_path.iterdir())
 
         with open(capacity_file, 'r') as fp:
             capacity = fp.read().strip()
