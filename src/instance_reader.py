@@ -28,8 +28,8 @@ class TypeAInstanceReader:
 
         return {'capacity': capacity,
                 'num_items': num_items,
-                'weights': items[:, 0],
-                'profits': items[:, 1],
+                'weights': items[:, 1],
+                'profits': items[:, 0],
                 'optimum': optimum,
                 'optimal_selection': np.full(num_items, -1)}
 
