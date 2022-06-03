@@ -4,7 +4,7 @@ import numpy as np
 
 
 @dataclass(frozen=True)
-class InstanceData:
+class Instance:
     capacity: int
     num_items: int
     weights: np.ndarray
