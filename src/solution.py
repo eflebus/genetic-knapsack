@@ -1,36 +1,29 @@
-from dataclasses import dataclass, field
-
 import numpy as np
 
 
-@dataclass
 class Individual:
-    chromosome_size: int
-    chromosome: np.ndarray = field(init=False)
+    # TODO: add random mutation method
+    def __init__(self, chromosome: np.ndarray) -> None:
+        self.chromosome = chromosome
+        self.chromosome_size = len(chromosome)
 
-    def __post_init__(self) -> None:
-        self.chromosome = np.random.randint(
-            2, size=self.chromosome_size, dtype=np.uint8)
+    @classmethod
+    def from_random_chromosome(cls, chromosome_size: int):
+        return cls(np.random.randint(2, size=chromosome_size, dtype=np.uint8))
 
-    def compute_fitness(self, items_profits: np.ndarray) -> int:
-        return np.sum(self.chromosome * items_profits)
-
-    def compute_weight(self, items_weights: np.ndarray) -> int:
-        return np.sum(self.chromosome * items_weights)
+    def evaluate_attribute(self, items_property: np.ndarray) -> int:
+        return np.sum(self.chromosome * items_property)
 
 
-@dataclass
 class Population:
-    population_size: int
-    chromosome_size: int
-    individuals: list[Individual] = field(init=False)
+    def __init__(self, individuals: list[Individual]) -> None:
+        self.individuals = individuals
+        self.population_size = len(individuals)
+        self.chromosome_size = individuals[0].chromosome_size
 
-    def __post_init__(self) -> None:
-        self.individuals = [Individual(self.chromosome_size)
-                            for _ in range(self.population_size)]
+    @classmethod
+    def from_random_individuals(cls, population_size: int, chromosome_size: int):
+        return cls([Individual.from_random_chromosome(chromosome_size) for _ in range(population_size)])
 
-    def compute_fitness(self, items_profits: np.ndarray) -> np.ndarray:
-        return np.array([individual.compute_fitness(items_profits) for individual in self.individuals])
-
-    def compute_weight(self, items_weights: np.ndarray) -> np.ndarray:
-        return np.array([individual.compute_weight(items_weights) for individual in self.individuals])
+    def evaluate_attribute(self, items_property: np.ndarray) -> np.ndarray:
+        return np.array([individual.evaluate_attribute(items_property) for individual in self.individuals])

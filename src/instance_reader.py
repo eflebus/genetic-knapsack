@@ -17,7 +17,7 @@ class TypeAInstanceReader:
         self.input_path = input_path
 
     def read_instance(self) -> Instance:
-        """Read instance data from a single text file."""
+        """Read instance data from a text file."""
         def _str_to_nums(s: str) -> list[int]:
             return [int(num) for num in s.split()]
 
@@ -41,7 +41,7 @@ class TypeBInstanceReader:
         self.input_path = input_path
 
     def read_instance(self) -> Instance:
-        """Read instance data from a directory containing several text files."""
+        """Read instance data from a directory."""
         def _compute_optimum(profits: np.ndarray, optimal_selection: np.ndarray) -> int:
             return np.sum(profits * optimal_selection)
 
