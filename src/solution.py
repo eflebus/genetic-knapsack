@@ -69,10 +69,6 @@ class Population:
 
         return Individual(new_chromoA), Individual(new_chromoB)
 
-    def fitness_statistics(self, type: str, items_profit: np.ndarray) -> float:
-        fn = np.max if type == 'max' else np.mean
-        return fn(self.evaluate_attribute(items_profit))
-
     def fittest_individual(self, items_profit: np.ndarray) -> Individual:
         return self.individuals[np.argmax(self.evaluate_attribute(items_profit))]
 

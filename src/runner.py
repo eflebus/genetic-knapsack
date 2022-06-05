@@ -8,7 +8,7 @@ from src.solution import Population
 
 
 class Runner:
-    def __init__(self, instance: Instance, population: Population, elite_fraction: float, p_mutation: float, p_mating: float) -> None:
+    def __init__(self, instance: Instance, population: Population, elite_fraction: float, p_mutation: float, p_mating: float, num_generations: int) -> None:
         self.instance = instance
         self.population = population
         self.elite_size = math.ceil(
@@ -16,6 +16,10 @@ class Runner:
         self.num_offspring = self.population.population_size - self.elite_size
         self.p_mutation = p_mutation
         self.p_mating = p_mating
+        self.num_generations = num_generations
+        self.max_fitness = []
+        self.avg_fitness = []
+        self.best_solutions = []
 
     @staticmethod
     def evaluate_fitness(population: Population, instance: Instance) -> np.ndarray:
@@ -67,3 +71,34 @@ class Runner:
         elite_offspring = [offspring.individuals[i]
                            for i in elite_offspring_idxs]
         self.population = Population(elite_parents + elite_offspring)
+
+    def update_statistics(self):
+        fitness = self.evaluate_fitness(self.population, self.instance)
+        self.max_fitness.append(np.max(fitness))
+        self.avg_fitness.append(np.mean(fitness))
+        self.best_solutions.append(self.population.fittest_individual(
+            self.instance.items_profits))
+
+    def evolution_step(self) -> None:
+        # Parents selection
+        mate_pool = self.select_mate_pool()
+
+        # Parents recombination via crossover
+        offspring = self.mating(mate_pool, self.p_mating)
+
+        # Offspring mutation
+        self.mutation(offspring, self.p_mutation)
+
+        # Select new population via elitism
+        self.elitist_selection(offspring)
+
+        # Update population's fitness statistics
+        self.update_statistics()
+
+    def run(self) -> None:
+        # Initialize population statistics
+        self.update_statistics()
+
+        # Run evolution iterations
+        for _ in range(self.num_generations):
+            self.evolution_step()
