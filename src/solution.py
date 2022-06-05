@@ -2,7 +2,6 @@ import numpy as np
 
 
 class Individual:
-    # TODO: add random mutation method
     def __init__(self, chromosome: np.ndarray) -> None:
         self.chromosome = chromosome
         self.chromosome_size = len(chromosome)
@@ -13,6 +12,14 @@ class Individual:
 
     def evaluate_attribute(self, items_property: np.ndarray) -> int:
         return np.sum(self.chromosome * items_property)
+
+    def mutate(self, p_mutation: float) -> None:
+        mutation_idxs = np.random.random(
+            size=self.chromosome_size) <= p_mutation
+        self.chromosome[mutation_idxs] = 1 - self.chromosome[mutation_idxs]
+
+    def __str__(self) -> str:
+        return f"{self.chromosome}"
 
 
 class Population:
@@ -27,3 +34,10 @@ class Population:
 
     def evaluate_attribute(self, items_property: np.ndarray) -> np.ndarray:
         return np.array([individual.evaluate_attribute(items_property) for individual in self.individuals])
+
+    def mutate(self, p_mutation: int) -> None:
+        for individual in self.individuals:
+            individual.mutate(p_mutation)
+
+    def __str__(self) -> str:
+        return '\n'.join([f"Individual #{i}: {individual}" for i, individual in enumerate(self.individuals, start=1)])
