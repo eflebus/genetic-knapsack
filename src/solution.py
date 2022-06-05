@@ -58,7 +58,7 @@ class Population:
         for individual in self.individuals:
             individual.mutate(p_mutation)
 
-    @ staticmethod
+    @staticmethod
     def single_point_crossover(parent1: Individual, parent2: Individual, cross_idx: int) -> tuple[Individual, Individual]:
         """Single-point crossover recombination."""
         chromo1_part1, chromo1_part2 = parent1.split_chromosome(cross_idx)
@@ -68,6 +68,13 @@ class Population:
         new_chromoB = np.concatenate((chromo1_part2, chromo2_part1))
 
         return Individual(new_chromoA), Individual(new_chromoB)
+
+    def fitness_statistics(self, type: str, items_profit: np.ndarray) -> float:
+        fn = np.max if type == 'max' else np.mean
+        return fn(self.evaluate_attribute(items_profit))
+
+    def fittest_individual(self, items_profit: np.ndarray) -> Individual:
+        return self.individuals[np.argmax(self.evaluate_attribute(items_profit))]
 
     def __str__(self) -> str:
         return '\n'.join([f"Individual #{i}: {individual}" for i, individual in enumerate(self.individuals, start=1)])
