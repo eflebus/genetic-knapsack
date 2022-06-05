@@ -54,7 +54,7 @@ class Population:
     def evaluate_attribute(self, items_property: np.ndarray) -> np.ndarray:
         return np.array([individual.evaluate_attribute(items_property) for individual in self.individuals])
 
-    def mutate(self, p_mutation: int) -> None:
+    def mutate(self, p_mutation: float) -> None:
         for individual in self.individuals:
             individual.mutate(p_mutation)
 
