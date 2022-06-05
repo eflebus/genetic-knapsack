@@ -64,10 +64,10 @@ class Population:
         chromo1_part1, chromo1_part2 = parent1.split_chromosome(cross_idx)
         chromo2_part1, chromo2_part2 = parent2.split_chromosome(cross_idx)
 
-        new_chromoA = np.concatenate((chromo1_part1, chromo2_part2))
-        new_chromoB = np.concatenate((chromo1_part2, chromo2_part1))
+        new_chromo_A = np.concatenate((chromo1_part1, chromo2_part2))
+        new_chromo_B = np.concatenate((chromo1_part2, chromo2_part1))
 
-        return Individual(new_chromoA), Individual(new_chromoB)
+        return Individual(new_chromo_A), Individual(new_chromo_B)
 
     def fittest_individual(self, items_profit: np.ndarray) -> Individual:
         return self.individuals[np.argmax(self.evaluate_attribute(items_profit))]

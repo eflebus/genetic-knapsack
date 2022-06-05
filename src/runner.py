@@ -30,10 +30,9 @@ class Runner:
 
     def select_mate_pool(self) -> Population:
         """Roulette wheel."""
-        individuals_fitness = self.evaluate_fitness(
+        fitness = self.evaluate_fitness(
             self.population, self.instance)
-        selection_probs = individuals_fitness / np.sum(individuals_fitness)
-        print(f"Selection probs: {selection_probs}")
+        selection_probs = fitness / (np.sum(fitness) + 1e-6) + 1e-6
         selected_mates = random.choices(
             self.population.individuals, k=self.population.population_size, weights=selection_probs)
         # selection_probs = np.cumsum(individuals_fitness)
@@ -54,18 +53,12 @@ class Runner:
 
     def elitist_selection(self, offspring: Population) -> None:
         """Survivals, elitism."""
-        print('PARENTS')
-        print(self.population)
-        print('OFFSPRING')
-        print(offspring)
         parents_fitness = self.evaluate_fitness(self.population, self.instance)
         offspring_fitness = self.evaluate_fitness(offspring, self.instance)
         elite_parents_idxs = np.argpartition(
             parents_fitness, -self.elite_size)[-self.elite_size:]
         elite_offspring_idxs = np.argpartition(
             offspring_fitness, -self.num_offspring)[-self.num_offspring:]
-        print(f"elite_parents_idxs: {elite_parents_idxs}")
-        print(f"elite_offspring_idxs: {elite_offspring_idxs}")
         elite_parents = [self.population.individuals[i]
                          for i in elite_parents_idxs]
         elite_offspring = [offspring.individuals[i]
@@ -78,6 +71,10 @@ class Runner:
         self.avg_fitness.append(np.mean(fitness))
         self.best_solutions.append(self.population.fittest_individual(
             self.instance.items_profits))
+
+    def best_solution(self):
+        best_solutions_population = Population(self.best_solutions)
+        return best_solutions_population.fittest_individual(self.instance.items_profits)
 
     def evolution_step(self) -> None:
         # Parents selection
