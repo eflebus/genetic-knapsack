@@ -10,4 +10,4 @@ class Instance:
     items_weights: np.ndarray
     items_profits: np.ndarray
     optimum: int
-    optimal_selection: np.ndarray  # Array of -1s for type A instances
+    optimal_selection: np.ndarray
