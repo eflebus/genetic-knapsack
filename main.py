@@ -34,17 +34,13 @@ def main() -> None:
     instance = reader.read_instance()
     print(instance)
     population = Population.from_random_individuals(
-        population_size=population_size, chromosome_size=len(instance.items_weights))
+        size=population_size, num_genes=len(instance.items_weights))
     runner = Runner(instance, population, elite_fraction,
                     p_mutation, p_mating, num_generations)
     runner.run()
     print('\nRESULTS')
-    best_solution = runner.best_solution()
-    print(f"Best solution: {best_solution}")
-    print(
-        f"  Fitness: {best_solution.evaluate_attribute(instance.items_profits)}")
-    print(
-        f"  Weight: {best_solution.evaluate_attribute(instance.items_weights)}")
+    best_solution, best_fitness = runner.best_solution()
+    print(f"Best solution: {best_solution} -> {best_fitness}")
 
 
 if __name__ == '__main__':
