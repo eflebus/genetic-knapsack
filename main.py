@@ -32,15 +32,22 @@ def main() -> None:
     p_mating = args.mating_prob
     num_generations = args.num_generations
     instance = reader.read_instance()
-    print(instance)
     population = Population.from_random_individuals(
         size=population_size, num_genes=len(instance.items_weights))
     runner = Runner(instance, population, elite_fraction,
                     p_mutation, p_mating, num_generations)
     runner.run()
-    print('\nRESULTS')
-    best_solution, best_fitness = runner.best_solution()
-    print(f"Best solution: {best_solution} -> {best_fitness}")
+
+    best_individual, best_fitness, best_weight = runner.best_solution()
+    print(f"Best solution found after {num_generations} iterations")
+    print(f"Chromosome:\n{best_individual}\n")
+    print(f"Fitness: {best_fitness}")
+    print(
+        f"Weight: {best_weight} (capacity: {instance.capacity})\n\n{'*' * 50}\n")
+    print(f"Optimal selection:\n{instance.optimal_selection}\n")
+    print(f"Optimum: {instance.optimum}")
+    if best_fitness == instance.optimum:
+        print('Optimal solution found')
 
 
 if __name__ == '__main__':
