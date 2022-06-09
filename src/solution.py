@@ -22,6 +22,9 @@ class Individual:
     def split_chromosome(self, split_idx: int) -> list[np.ndarray]:
         return np.split(self._chromosome, [split_idx])
 
+    def __eq__(self, other):
+        return np.array_equal(self._chromosome, other._chromosome)
+
     def __str__(self) -> str:
         return f"{self._chromosome}"
 
@@ -59,12 +62,6 @@ class Population:
     def get_individual(self, idx: int) -> Individual:
         return self._individuals[idx]
 
-    def get_chromosomes(self) -> list[np.ndarray]:
-        return [individual.chromosome for individual in self._individuals]
-
-    def get_chromosome(self, idx: int) -> np.ndarray:
-        return self._individuals[idx].chromosome
-
     def mutation(self, p_mutation: float) -> None:
         for individual in self._individuals:
             individual.mutation(p_mutation)
@@ -75,7 +72,7 @@ class Population:
         chromo2_part1, chromo2_part2 = parent2.split_chromosome(cross_idx)
 
         new_chromo_A = np.concatenate((chromo1_part1, chromo2_part2))
-        new_chromo_B = np.concatenate((chromo1_part2, chromo2_part1))
+        new_chromo_B = np.concatenate((chromo2_part1, chromo1_part2))
 
         return Individual(new_chromo_A), Individual(new_chromo_B)
 
